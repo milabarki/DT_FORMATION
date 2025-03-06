@@ -1,0 +1,17 @@
+{
+	"@type":"Cube",
+	"Name":"SALE",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('PRODUIT')"
+		},
+		{
+			"@id":"Dimensions('PERIOD')"
+		},
+		{
+			"@id":"Dimensions('MEASURE')"
+		}
+	],
+	"Views@Code.links":[]
+}

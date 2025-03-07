@@ -5,7 +5,16 @@
 (['Dispo','Montant']*-1- ['CDB','Montant']) < 0,['Dispo','Montant'] + ['CDB','Montant'] ,0);
 
 
-#  -- Modif le 07/03/2025
+
+['Solde'] = N:
+if( SUBST( !Bilan, 8,1 ) @= 'D' &
+Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'D', 'Montant')*-1-Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'C', 'Montant') 
+  >0,
+Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'D', 'Montant')-Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'C', 'Montant') *-1
+  ,CONTINUE);
+
+
+
 ['Solde'] = N:
 if( SUBST( !Bilan, 8,1 ) @= 'C' &
 Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'D', 'Montant')*-1-Db('Bilan', !CP,   SUBST( !Bilan, 1,7 ) | 'C', 'Montant') 

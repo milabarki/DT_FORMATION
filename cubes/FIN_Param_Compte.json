@@ -1,0 +1,22 @@
+{
+	"@type":"Cube",
+	"Name":"FIN_Param_Compte",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Compte')"
+		},
+		{
+			"@id":"Dimensions('Hierarchie_FIN')"
+		},
+		{
+			"@id":"Dimensions('Indicateur_Compte')"
+		}
+	],
+	"Rules@Code.link":"FIN_Param_Compte.rules",
+	"Views@Code.links":
+	[
+		"FIN_Param_Compte.views/z_ALL.json",
+		"FIN_Param_Compte.views/Default.json"
+	]
+}

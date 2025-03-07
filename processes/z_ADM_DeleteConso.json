@@ -1,0 +1,37 @@
+{
+	"@type":"Process",
+	"Name":"z_ADM_DeleteConso",
+	"HasSecurityAccess":true,
+	"Code@Code.link":"z_ADM_DeleteConso.ti",
+	"DataSource":
+	{
+		"Type":"TM1DimensionSubset",
+		"dataSourceNameForServer":"Compte:Compte",
+		"dataSourceNameForClient":"Compte:Compte",
+		"subset":"All"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pDim",
+			"Prompt":"",
+			"Value":"Compte",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"vElement",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		}
+	],
+	"UID": "1739270472000",
+	"UIData": "_ParameterConstraints=e30=\f",
+	"VariablesUIData": [
+		"VarType=32\fColType=827\f"
+	]
+}

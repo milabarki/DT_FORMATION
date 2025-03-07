@@ -1,0 +1,127 @@
+#region Prolog
+
+
+SetInputCharacterSet ('TM1CS_UTF8');
+
+vDim = 'Compte';
+
+vNiveau0 = '';
+vNiveau1 = '';
+vNiveau2 = '';
+vNiveau3 = '';
+vNiveau4 = '';
+vNiveau5 = '';
+vNiveau6 = '';
+vNiveau7 = '';
+vNiveau8 = '';
+vNiveau9 = '';
+
+
+A0 = '';
+A1 = '';
+A2 = '';
+A3 = '';
+A4 = '';
+A5 = '';
+A6 = '';
+A7 = '';
+A8 = '';
+A9 = '';
+
+
+DimensionDeleteAllElements(vDim );
+
+
+
+
+#endregion
+#region Metadata
+
+
+IF (vNiveau0 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau0,'n');
+      DimensionElementInsertDirect(vDim,'','CRF','n');
+      DimensionElementComponentAddDirect( vDim,'CRF',vNiveau0,1);   
+      vParent = vNiveau0;
+Endif;
+
+IF (vNiveau1 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau1,'n');
+    IF(vParent @<>'');
+      DimensionElementComponentAddDirect( vDim,vParent,vNiveau1,1);   
+      vParent = vNiveau1;
+endif;
+endif;
+
+IF (vNiveau2 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau2,'n');
+    IF(vParent @<>'');
+    DimensionElementComponentAddDirect( vDim,vParent,vNiveau2,1);   
+      vParent = vNiveau2;
+endif;
+endif;
+
+IF (vNiveau3 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau3,'n');
+    IF(vParent @<>'');
+      DimensionElementComponentAddDirect( vDim,vParent,vNiveau3,1);   
+      vParent = vNiveau3;
+endif;
+endif;
+
+IF (vNiveau4 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau4,'n');
+    IF(vParent @<>'');
+      DimensionElementComponentAddDirect( vDim,vParent,vNiveau4,1);   
+      vParent = vNiveau4;
+endif;
+endif;
+
+IF (vNiveau5 @<>'');
+      DimensionElementInsertDirect(vDim,'',vNiveau5,'n');
+    IF(vParent @<>'');
+      DimensionElementComponentAddDirect( vDim,vParent,vNiveau5,1);   
+      vParent = vNiveau5;
+endif;
+endif;
+
+
+#endregion
+#region Data
+
+IF (vNiveau0 @<>'');
+AttrPutS(A0,vDim, vNiveau0, 'Libelle' );
+endif;
+
+IF (vNiveau1 @<>'');
+AttrPutS(A1,vDim, vNiveau1, 'Libelle' );
+endif;
+
+IF (vNiveau2 @<>'');
+AttrPutS(A2,vDim, vNiveau2, 'Libelle' );
+endif;
+
+IF (vNiveau3 @<>'');
+AttrPutS(A3,vDim, vNiveau3, 'Libelle' );
+endif;
+
+IF (vNiveau4 @<>'');
+AttrPutS(A4 | '.',vDim, vNiveau4, 'Libelle' );
+endif;
+
+IF (vNiveau5 @<>'');
+AttrPutS(A5,vDim, vNiveau5, 'Libelle' );
+endif;
+
+
+#AttrPuts(vNiveau1,vDim,vNiveau4,'Type');
+
+
+
+#endregion
+#region Epilog
+
+AttrPuts('X','Compte','CRF_170','Do_Not_Delete');
+AttrPuts('X','Compte','CRF_320','Do_Not_Delete');
+
+#endregion

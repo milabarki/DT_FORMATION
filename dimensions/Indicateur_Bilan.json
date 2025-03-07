@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Indicateur_Bilan",
+	"Hierarchies@Code.links":
+	[
+		"Indicateur_Bilan.hierarchies/Indicateur_Bilan.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Indicateur_Bilan')/Hierarchies('Indicateur_Bilan')"
+	}
+}

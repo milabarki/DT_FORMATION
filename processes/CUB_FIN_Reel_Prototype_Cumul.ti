@@ -1,0 +1,75 @@
+#region Prolog
+
+vCubeSource = 'FIN_Reel_Prototype';
+vCubeCible = 'FIN_Reel_Prototype';
+
+vViewSource = GetProcessName() |  '_Source';
+
+ViewCreate( vCubeSource, vViewSource, 1 );
+
+
+vSubSetName = vViewSource;
+vDim = 'Indicateur';
+
+SubsetCreate( vDim, vSubSetName, 1 );
+
+SubsetElementInsert( vDim, vSubSetName, 'M', 0 );
+
+ViewSubsetAssign( vCubeSource, vViewSource, vDim, vSubSetName );
+
+#******************************** OPTIONS VUE
+
+ViewExtractSkipCalcsSet( vCubeSource , vViewSource , 1 ) ;
+ViewExtractSkipRuleValuesSet( vCubeSource , vViewSource , 0 ) ;
+ViewExtractSkipZeroesSet( vCubeSource , vViewSource , 1 ) ;
+
+DatasourceNameForServer = vCubeSource ;
+DatasourceCubeview = vViewSource ;
+
+#endregion
+#region Data
+
+vAnnee = SUBST( Periode, 1,4);
+vAnneeCumul = vAnnee;
+vPeriode =   Periode ;
+CP=Centre_Profit;
+M = Value;
+
+i = 1;
+
+
+while ( i <=18);
+
+   
+   if(vAnnee @= vAnneeCumul);
+       ASCIIOutput( 'Annee.txt',Periode,vPeriode,vAnnee,vAnneeCumul,Version,Indicateur );
+
+    CellIncrementN( m, 'FIN_Reel_Prototype' ,Version,vPeriode,CP,Compte,'C');
+    endif;
+
+
+if(i<=6);
+CellIncrementN( m, 'FIN_Reel_Prototype' ,Version,vPeriode,CP,Compte,'G06');
+endif;
+
+if(i<=12);
+    CellIncrementN( m, 'FIN_Reel_Prototype' ,Version,vPeriode,CP,Compte,'G12');
+endif;
+
+    if(i<=18);
+    CellIncrementN( m, 'FIN_Reel_Prototype' ,Version,vPeriode,CP,Compte,'G18');
+endif;
+
+    i = i +1;
+vPeriode = ATTRS('Periode',vPeriode,'Mois_Suiv');
+vAnneeCumul = subst(vPeriode,1,4);
+ 
+end;
+
+
+
+
+
+
+
+#endregion

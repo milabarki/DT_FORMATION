@@ -1,0 +1,68 @@
+#region Prolog
+
+#ExecuteProcess( 'DIM_Compte_CRF' );
+#DimensionDeleteAllElements( 'Compte' );
+
+
+
+vDim = 'Compte';
+
+
+#endregion
+#region Metadata
+
+
+
+if(Compte@<>'');
+    DimensionElementInsert( 'Compte', '', Compte, 'N' );
+    DimensionElementInsert( 'Compte', '', 'Bilan', 'N' );
+    DimensionElementInsert( 'Compte', '', 'CR', 'N' );
+    DimensionElementInsert( 'Compte', '', 'Budget', 'N' );
+    DimensionElementInsert( 'Compte', '', 'Total_Compte', 'N' );
+
+    DimensionElementComponentAdd( 'Compte', 'Total_Compte', 'Bilan', 1 );
+    DimensionElementComponentAdd( 'Compte', 'Total_Compte', 'CR', 1 );
+    DimensionElementComponentAdd( 'Compte', 'Total_Compte', 'Budget', 1 );
+    
+
+if(subst(Compte,1,1)@<'6');
+    vConso = 'Bilan';
+elseif(subst(Compte,1,1)@>'7');
+    vConso = 'Budget';
+else;
+    vConso = 'CR';
+endif;
+
+
+DimensionElementComponentAdd( 'Compte', vConso, Compte, 1 );
+
+
+else;
+DimensionElementInsert( 'Compte', '', 'Pas_de_Compte', 'N' );
+DimensionElementComponentAdd( 'Compte', 'Total_Compte', 'Pas_de_Compte', 1 );
+endif;
+
+
+
+
+
+
+#endregion
+#region Data
+
+AttrPuts('X','Compte','Total_Compte','Do_Not_Delete');
+AttrPutS('X','Compte','Bilan','Do_Not_Delete');
+AttrPutS('X','Compte','CR','Do_Not_Delete');
+AttrPutS('X','Compte',Compte,'Check_Compte');
+
+
+
+#endregion
+#region Epilog
+#ExecuteProcess( 'z_TMP_CUB_FIN_Reel_Prototype' );
+#ExecuteProcess( 'z_TMP_CUB_FIN_Reel_Prototype_C032' );
+
+ExecuteProcess( 'z_TMP_Dim_Compte' );
+
+
+#endregion

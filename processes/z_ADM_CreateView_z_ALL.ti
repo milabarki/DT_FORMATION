@@ -1,0 +1,10 @@
+#region Prolog
+
+
+ViewName = 'z_ALL';
+
+ViewCreate( pCube, ViewName, 0 );
+
+
+
+#endregion

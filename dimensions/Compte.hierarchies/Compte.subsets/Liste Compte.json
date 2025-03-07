@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"Liste Compte",
+	"Alias":"Libelle",
+	"Expression":"TM1IGNORE_BADTUPLES {FILTER({ORDER(TM1FILTERBYLEVEL(TM1SUBSETALL([Compte].[Compte]) , 0) , IIF([Compte].[Compte].CURRENTMEMBER.PROPERTIES(\"Libelle\")=\"\", [Compte].[Compte].CURRENTMEMBER.PROPERTIES(\"MEMBER_CAPTION\"), [Compte].[Compte].CURRENTMEMBER.PROPERTIES(\"Libelle\")) , BASC)}, (INSTR(1, [Compte].[Compte].CURRENTMEMBER.PROPERTIES(\"Check_Compte\"), \"X\", 1) >= 1))}"
+}

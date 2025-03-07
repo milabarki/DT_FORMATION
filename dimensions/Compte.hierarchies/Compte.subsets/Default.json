@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"Default",
+	"Alias":"Libelle",
+	"Expression":"TM1IGNORE_BADTUPLES {{[Compte].[Compte].Levels(0).MEMBERS}}"
+}

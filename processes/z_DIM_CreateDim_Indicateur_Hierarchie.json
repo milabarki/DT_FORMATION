@@ -1,0 +1,15 @@
+{
+	"@type":"Process",
+	"Name":"z_DIM_CreateDim_Indicateur_Hierarchie",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"z_DIM_CreateDim_Indicateur_Hierarchie.ti",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[],
+	"UID": "1739270519000",
+	"UIData": "_ParameterConstraints=e30=\f",
+	"VariablesUIData": []
+}

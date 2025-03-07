@@ -1,1 +1,1 @@
-{"Version":1,"Ignore":["!Dimensions('}CubeSecStatus')","!Dimensions('}ElementSecStatus')","Dimensions('Sandboxes')"],"Files":[]}
+{"Version":1,"Ignore":["Dimensions('Fusion')","Dimensions('TEST')","Dimensions('Z_Tmp_')","Dimensions('Z_Tmp_Hierarchie01_CRF')","Dimensions('Z_Tmp_Hierarchie02_CRP')","Dimensions('Z_Tmp_Hierarchie02_CRP_PA')","!Dimensions('}CubeSecStatus')","!Dimensions('}ElementSecStatus')","Dimensions('Sandboxes')"],"Files":[".applications/Prototype/PROTO_CRF.xlsm.json",".applications/Prototype/}externals/PROTO_CRF_20250207140357.xlsm"]}

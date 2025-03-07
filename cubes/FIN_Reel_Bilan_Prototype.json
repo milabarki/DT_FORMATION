@@ -1,0 +1,24 @@
+{
+	"@type":"Cube",
+	"Name":"FIN_Reel_Bilan_Prototype",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Version')"
+		},
+		{
+			"@id":"Dimensions('Periode')"
+		},
+		{
+			"@id":"Dimensions('Centre_Profit')"
+		},
+		{
+			"@id":"Dimensions('Z_Tmp_Hierarchie_FIN')"
+		},
+		{
+			"@id":"Dimensions('Indicateur')"
+		}
+	],
+	"Rules@Code.link":"FIN_Reel_Bilan_Prototype.rules",
+	"Views@Code.links":[]
+}

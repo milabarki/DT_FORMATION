@@ -1,0 +1,37 @@
+#region Prolog
+
+vProcessName = GetProcessName();
+vTime = TIMST( NOW() , '\Y\m\d_\h\i\s' );
+vSubsetName = vProcessName | vTime;
+
+
+vMDX = '{HIERARCHIZE({TM1SUBSETALL( [ ' | pDIM | ' ] )})}';
+
+
+if(SubsetExists (pDim,vSubsetName) = 0);
+	SubsetCreate ( pDIM, vSubsetName,1);
+endif;
+
+
+SubsetMDXSet(pDim, vSubsetName, vMDX);
+
+
+# definition du subset comme source de données
+DataSourceType='SUBSET';
+DatasourceNameForServer=pDim;
+DatasourceDimensionSubset=vSubsetName;
+
+#endregion
+#region Metadata
+
+
+
+# # On supprime l'élément si le niveau de l'élément est une conso
+
+ if(Ellev(pDim,vElement)>0);
+     DimensionElementDelete(pDIM, vElement);
+endif;
+
+
+
+#endregion

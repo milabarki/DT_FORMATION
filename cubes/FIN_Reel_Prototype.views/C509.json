@@ -1,0 +1,28 @@
+{
+	"@type":"MDXView",
+	"Name":"C509",
+	"MDX@Code.link":"C509.mdx",
+	"Meta": {
+		"Aliases": {
+			"[Compte].[Compte]": "Libelle"
+		},
+		"ExpandAboves": {
+			"[Centre_Profit].[Centre_Profit]": false,
+			"[Periode].[Periode]": false,
+			"[Compte].[Compte]": false,
+			"[Version].[Version]": false,
+			"[Indicateur].[Indicateur]": false
+		},
+		"ContextSets": {
+			"[Periode].[Periode]": {
+				"Expression": "{[Periode].[Periode].MEMBERS}"
+			},
+			"[Version].[Version]": {
+				"Expression": "{[Version].[Version].MEMBERS}"
+			},
+			"[Indicateur].[Indicateur]": {
+				"Expression": "{[Indicateur].[Indicateur].MEMBERS}"
+			}
+		}
+	}
+}

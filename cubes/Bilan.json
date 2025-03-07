@@ -1,0 +1,18 @@
+{
+	"@type":"Cube",
+	"Name":"Bilan",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('CP')"
+		},
+		{
+			"@id":"Dimensions('Bilan')"
+		},
+		{
+			"@id":"Dimensions('Indicateur_Bilan')"
+		}
+	],
+	"Rules@Code.link":"Bilan.rules",
+	"Views@Code.links":[]
+}

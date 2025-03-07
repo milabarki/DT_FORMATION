@@ -1,0 +1,118 @@
+#region Prolog
+
+ DimensionSortOrder( pDimTarget,'ByName','Ascending','ByHierarchy','Ascending' );
+
+
+ExecuteProcess( 'z_ADM_DeleteHierarchy','pDim', pDimTarget );
+
+
+vProcessName = GetProcessName();
+vTime = TIMST( NOW() , '\Y\m\d_\h\i\s' );
+vSubsetName = vProcessName | vTime;
+
+
+vMDX = '{HIERARCHIZE({TM1SUBSETALL( [ ' | pDIM | ' ] )})}';
+
+
+if(SubsetExists (pDim,vSubsetName) = 0);
+	SubsetCreate ( pDIM, vSubsetName,1);
+endif;
+
+
+SubsetMDXSet(pDim, vSubsetName, vMDX);
+
+
+# definition du subset comme source de données
+DataSourceType='SUBSET';
+DatasourceNameForServer=pDim;
+DatasourceDimensionSubset=vSubsetName;
+
+
+### Replicate Attributes ###
+
+# Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
+
+sAttrDim = '}ElementAttributes_' | pDim;
+If( DimensionExists( sAttrDim ) = 1 );
+  nNumAttrs = DimSiz( sAttrDim );
+  nCount = 1;
+  While( nCount <= nNumAttrs );
+    sAttrName = DimNm( sAttrDim, nCount );
+    sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
+        AttrInsert( pDimTarget, '', sAttrName, sAttrType );
+    nCount = nCount + 1;
+  End;
+EndIf;
+
+
+
+#endregion
+#region Metadata
+
+### Add Elements to cloned dimension ###
+
+pSourceDim = pDim;
+pTargetDim = pDimTarget;
+
+
+  sElType =  DType( pSourceDim, vElement );
+
+  DimensionElementInsert( pTargetDim, '', vElement, 'n');
+
+  IF( sElType @= 'C' & ElCompN( pSourceDim, vElement ) > 0 );
+    nChildren = ElCompN( pSourceDim, vElement );
+    nCount = 1;
+    While( nCount <= nChildren );
+      sChildElement = ElComp( pSourceDim, vElement, nCount );
+      sChildType = DType( pSourceDim, sChildElement );
+      sChildWeight = ElWeight( pSourceDim, vElement, sChildElement );
+      DimensionElementInsert( pTargetDim, '', sChildElement, sChildType );
+      DimensionElementComponentAdd( pTargetDim, vElement, sChildElement, sChildWeight );
+      nCount = nCount + 1;
+    End;
+  EndIf;
+
+
+
+#endregion
+#region Data
+
+
+pSourceDim = pDim;
+pTargetDim = pDimTarget;
+
+### Replicate Attributes ###
+
+# Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
+
+#& dimix(pTargetDim,sAttrVal)=0
+
+    nCount = 1;
+    While( nCount <= nNumAttrs );
+      sAttrName = DimNm( sAttrDim, nCount );
+      sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+      If( sAttrType @= 'S' % sAttrType @= 'A'  );
+        sAttrVal = AttrS( pSourceDim, vElement, sAttrName );
+        If( sAttrVal @<> '' );
+          AttrPutS( sAttrVal, pTargetDim, vElement, sAttrName );
+        EndIf;
+      Else;
+        nAttrVal = AttrN( pSourceDim, vElement, sAttrName );
+        If( nAttrVal <> 0 );
+          AttrPutN( nAttrVal, pTargetDim, vElement, sAttrName );
+        EndIf;
+      EndIf;
+      nCount = nCount + 1;
+    End;
+
+
+
+#endregion
+#region Epilog
+
+# On attache les comptes comptable 
+ExecuteProcess('z_ADM_Fusion_Dimension_Step2' );
+
+CubeProcessFeeders( 'FIN_Reel_Prototype' );
+
+#endregion

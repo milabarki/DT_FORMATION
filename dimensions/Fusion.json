@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Fusion",
+	"Hierarchies@Code.links":
+	[
+		"Fusion.hierarchies/Fusion.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Fusion')/Hierarchies('Fusion')"
+	}
+}

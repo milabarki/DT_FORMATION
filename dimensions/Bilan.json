@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Bilan",
+	"Hierarchies@Code.links":
+	[
+		"Bilan.hierarchies/Bilan.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Bilan')/Hierarchies('Bilan')"
+	}
+}

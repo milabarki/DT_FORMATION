@@ -1,0 +1,30 @@
+{
+	"@type":"Cube",
+	"Name":"FIN_Reel_Prototype",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Version')"
+		},
+		{
+			"@id":"Dimensions('Periode')"
+		},
+		{
+			"@id":"Dimensions('Centre_Profit')"
+		},
+		{
+			"@id":"Dimensions('Compte')"
+		},
+		{
+			"@id":"Dimensions('Indicateur')"
+		}
+	],
+	"Rules@Code.link":"FIN_Reel_Prototype.rules",
+	"Views@Code.links":
+	[
+		"FIN_Reel_Prototype.views/Z_ALL.json",
+		"FIN_Reel_Prototype.views/C509.json",
+		"FIN_Reel_Prototype.views/CUMUL.json",
+		"FIN_Reel_Prototype.views/Default.json"
+	]
+}

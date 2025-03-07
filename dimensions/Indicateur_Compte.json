@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Indicateur_Compte",
+	"Hierarchies@Code.links":
+	[
+		"Indicateur_Compte.hierarchies/Indicateur_Compte.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Indicateur_Compte')/Hierarchies('Indicateur_Compte')"
+	}
+}

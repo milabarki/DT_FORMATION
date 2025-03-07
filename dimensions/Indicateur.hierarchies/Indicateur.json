@@ -1,0 +1,36 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Indicateur",
+	"Elements":
+	[
+		{
+			"Name":"M",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"G06",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"G03",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"G12",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"G18",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"S",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

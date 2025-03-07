@@ -1,0 +1,23 @@
+{
+	"@type":"Cube",
+	"Name":"Z_TEST_Delete",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('Bilan')"
+		},
+		{
+			"@id":"Dimensions('Centre_Profit')"
+		},
+		{
+			"@id":"Dimensions('Compte')"
+		},
+		{
+			"@id":"Dimensions('CP')"
+		},
+		{
+			"@id":"Dimensions('Periode')"
+		}
+	],
+	"Views@Code.links":[]
+}

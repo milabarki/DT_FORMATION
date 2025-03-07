@@ -1,0 +1,32 @@
+{
+	"@type":"Hierarchy",
+	"Name":"Indicateur_Bilan",
+	"Elements":
+	[
+		{
+			"Name":"Montant",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"D",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"C",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Solde Débiteur",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Solde Créditeur",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"Solde",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

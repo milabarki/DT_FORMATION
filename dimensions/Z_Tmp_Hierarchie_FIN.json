@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"Z_Tmp_Hierarchie_FIN",
+	"Hierarchies@Code.links":
+	[
+		"Z_Tmp_Hierarchie_FIN.hierarchies/Z_Tmp_Hierarchie_FIN.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('Z_Tmp_Hierarchie_FIN')/Hierarchies('Z_Tmp_Hierarchie_FIN')"
+	}
+}

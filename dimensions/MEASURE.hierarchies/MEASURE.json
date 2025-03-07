@@ -1,0 +1,16 @@
+{
+	"@type":"Hierarchy",
+	"Name":"MEASURE",
+	"Elements":
+	[
+		{
+			"Name":"VALUE",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"COMMENT",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

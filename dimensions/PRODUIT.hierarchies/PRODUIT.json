@@ -1,0 +1,20 @@
+{
+	"@type":"Hierarchy",
+	"Name":"PRODUIT",
+	"Elements":
+	[
+		{
+			"Name":"SAC",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"CAR",
+			"Type":"Numeric"
+		},
+		{
+			"Name":"BOAT",
+			"Type":"Numeric"
+		}
+	],
+	"Subsets@Code.links":[]
+}

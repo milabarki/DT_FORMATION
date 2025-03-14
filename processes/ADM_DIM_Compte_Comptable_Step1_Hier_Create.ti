@@ -1,0 +1,435 @@
+#region Prolog
+
+
+# ==================================================================================================================
+##--- Process Name : ADM_DIM_Compte_Comptable_Step1_Hier_Create
+##--- Description     : Génère les hierarchies dans une dimension technique en fonction des données du cube Fin_Param_Hierarchie_Compte.
+##--- Creation Date  : 12/03/2025 By MBA-Datatilt
+##--- Version : V1.0
+##--- Update : 
+# ==================================================================================================================
+
+
+# ==================================================================================================================
+# -- VARIABLE INITIALIZATION
+# ==================================================================================================================
+cProcessName = GetProcessName();
+vTime = TIMST( NOW() , '\Y\m\d_\h\i\s' );
+
+pTemp = 1;
+pDebug =1;
+
+# ==================================================================================================================
+# -- CREATE SOURCE VIEW (CUBE : FIN_Param_Hierarchie_Compte)
+# ==================================================================================================================
+sCubeSource = 'FIN_Param_Hierarchie_Compte';
+sViewSource = 'Z_Source_View_'| cProcessName;
+sSubsetSource = 'Z_Source_Subset_'|cProcessName | vTime;
+
+# -- 
+ViewDestroy( sCubeSource, sViewSource );
+ViewCreate( sCubeSource , sViewSource , pTemp );
+
+# -- 1 -- Dim : Hierarchie_FIN --------------------------------------------------------------------------------------------------------------------------------------------------------------
+sDim = 'Hierarchie_FIN' ;
+sDimHierarchie = 'Hierarchie_FIN' ;
+
+HierarchySubsetDestroy( sDim, sDimHierarchie, sSubsetSource );
+HierarchySubsetCreate( sDim, sDimHierarchie, sSubsetSource, pTemp );
+
+sMdx ='{{TM1FILTERBYLEVEL(TM1SUBSETALL([Hierarchie_FIN].[Hierarchie_FIN]) , 0)}}';
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, sMDX );
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, '' );
+
+ViewSubsetAssign( sCubeSource , sViewSource , sDim , sSubsetSource );
+
+# -- 2 -- Dim : Item ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+sDim = 'Item' ;
+sDimHierarchie = 'Item' ;
+
+HierarchySubsetDestroy( sDim, sDimHierarchie, sSubsetSource );
+HierarchySubsetCreate( sDim, sDimHierarchie, sSubsetSource, pTemp );
+
+sMdx ='{{TM1FILTERBYLEVEL(TM1SUBSETALL([Item].[Item]) , 0)}}';
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, sMDX );
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, '' );
+
+ViewSubsetAssign( sCubeSource , sViewSource , sDim , sSubsetSource );
+
+# -- 3 -- Dim : Indicateur_Hierarchie -------------------------------------------------------------------------------------------------------------------------------------------------------
+sDim = 'Indicateur_Hierarchie' ;
+sDimHierarchie = 'Indicateur_Hierarchie' ;
+
+HierarchySubsetDestroy( sDim, sDimHierarchie, sSubsetSource );
+HierarchySubsetCreate( sDim, sDimHierarchie, sSubsetSource, pTemp );
+
+sMdx ='{{TM1FILTERBYLEVEL(TM1SUBSETALL([Indicateur_Hierarchie].[Indicateur_Hierarchie]) , 0)}}';
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, sMDX );
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, '' );
+
+ViewSubsetAssign( sCubeSource , sViewSource , sDim , sSubsetSource );
+
+# ==================================================================================================================
+# -- OPTIMISATION FONCTIONS 
+#
+ViewExtractSkipCalcsSet( sCubeSource , sViewSource , 1);
+ViewExtractSkipRuleValuesSet( sCubeSource , sViewSource , 1 );
+ViewExtractSkipZeroesSet( sCubeSource , sViewSource , 1 );
+
+# ==================================================================================================================
+# -- ASSIGN DATASOURCE
+#
+DataSourceType = 'VIEW' ;
+DatasourceNameForServer = sCubeSource ;
+DatasourceNameForClient = sCubeSource ;
+DatasourceCubeView = sViewSource ;
+
+# ==================================================================================================================
+# -- Target (Dimension : Z_Tmp_Hierarchie_FIN)
+# ==================================================================================================================
+#
+vDimTempHierarchie = 'Z_Tmp_Hierarchie_FIN_TEST'  ;
+vHierarchieTemp = vDimTempHierarchie;
+# --- Annuler et remplacer tous les éléments dans la dimension cible 
+IF(DimensionExists( vDimTempHierarchie )=0);
+    DimensionCreate( vDimTempHierarchie);
+ELSE;
+    DimensionDeleteAllElements( vDimTempHierarchie );
+ENDIF;
+
+
+#### Attention il faut penser a clearer les vue une fois la la hierarchie sera supprimée ######
+
+
+#endregion
+#region Metadata
+
+# -- Get Hierarchy Name From "Hierarchie_FIN" Dimension
+vHierarchyName = ATTRS( 'Hierarchie_FIN', Hierarchie, 'Nom' );
+
+# -- Attributes Creation -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '',  'Lib' | '_' | vHierarchyName, 'S' );
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '',  'Libelle' | '_' | vHierarchyName, 'A' );
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '',  'Code-Libelle', 'A' );
+
+
+### A revoir si on garde ou pas : si la rux avec elpar fonctionne on retire cette partie 
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N00' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N01' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N02' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N03' | '_' | vHierarchyName ,'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N04' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N05' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N06' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N07' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N08' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N09' | '_' | vHierarchyName, 'S');
+ElementAttrInsert( vDimTempHierarchie, vHierarchieTemp, '', 'N10' | '_' | vHierarchyName, 'S');
+
+# -- Get different levels of elements to insert into the hierarchy -----------------------------------------------------------------------------------------------------------------------
+vNiveau0   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N00' );
+vNiveau1   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N01' );
+vNiveau2   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N02' );
+vNiveau3   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N03' );
+vNiveau4   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N04' );
+vNiveau5   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N05' );
+vNiveau6   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N06' );
+vNiveau7   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N07' );
+vNiveau8   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N08' );
+vNiveau9   = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N09' );
+vNiveau10 = CellGetS( sCubeSource, Hierarchie,Item, 'CODE_N10' );
+
+# -- Insertion of elements into the technical dimension based on the "vNiveauX" variables retrieved ----------------------------------------------------------------------------
+IF (vNiveau0 @<>'');
+    HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp , '', vNiveau0 , 'N' );
+    HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', Hierarchie , 'N' );
+    HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, Hierarchie, vNiveau0, 1); 
+    vParent = vNiveau0;
+ENDIF;
+
+IF (vNiveau1 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau1 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau1, 1); 
+        vParent = vNiveau1;
+    ENDIF;
+ENDIF;
+
+IF (vNiveau2 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau2 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau2, 1);   
+        vParent = vNiveau2;
+    ENDIF;
+ENDIF;
+
+IF (vNiveau3 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau3 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau3, 1);   
+        vParent = vNiveau3;
+    ENDIF;
+ENDIF;
+
+IF (vNiveau4 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau4 , 'N' );
+    IF(vParent @<>'');
+          HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau4, 1);  
+          vParent = vNiveau4;
+   ENDIF;
+ENDIF;
+
+IF (vNiveau5 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau5 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau5, 1);    
+        vParent = vNiveau5;
+   ENDIF;
+ENDIF;
+
+IF (vNiveau6 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau6 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau6, 1);    
+        vParent = vNiveau6;
+   ENDIF;
+ENDIF;
+
+IF (vNiveau7 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau7 , 'N' );
+    IF(vParent @<>'');
+      HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau7, 1);    
+      vParent = vNiveau7;
+   ENDIF;
+ENDIF;
+
+IF (vNiveau8 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau8 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau8, 1);    
+        vParent = vNiveau8;
+   ENDIF;
+ENDIF;
+
+IF (vNiveau9 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau9 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau9, 1);   
+        vParent = vNiveau9;
+  ENDIF;
+ENDIF;
+
+IF (vNiveau10 @<>'');
+      HierarchyElementInsertDirect( vDimTempHierarchie, vHierarchieTemp, '', vNiveau10 , 'N' );
+    IF(vParent @<>'');
+        HierarchyElementComponentAddDirect( vDimTempHierarchie, vHierarchieTemp, vParent, vNiveau10, 1);  
+        vParent = vNiveau10;
+  ENDIF;
+ENDIF;
+
+#endregion
+#region Data
+
+# -- Get Hierarchy Name From "Hierarchie_FIN" Dimension
+vHierarchyName = ATTRS( 'Hierarchie_FIN', Hierarchie, 'Nom' );
+# -- Insert Hierarchy Labels
+ElementAttrPutS( vHierarchyName |'.' , vDimTempHierarchie, vHierarchieTemp, Hierarchie,  'Lib' | '_' | vHierarchyName  );
+ElementAttrPutS( vHierarchyName |'.' , vDimTempHierarchie, vHierarchieTemp, Hierarchie,   'Code-Libelle'  );
+ElementAttrPutS( vHierarchyName |'.' , vDimTempHierarchie, vHierarchieTemp, Hierarchie,  'Libelle' | '_' | vHierarchyName );
+
+
+# -- Get levels of elements
+vNiveau0   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N00' );
+vNiveau1   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N01' );
+vNiveau2   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N02' );
+vNiveau3   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N03' );
+vNiveau4   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N04' );
+vNiveau5   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N05' );
+vNiveau6   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N06' );
+vNiveau7   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N07' );
+vNiveau8   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N08' );
+vNiveau9   = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N09' );
+vNiveau10 = CellGetS( sCubeSource,Hierarchie,Item,'CODE_N10' );
+# -- Get Labels of elements
+vLib0  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N00' );
+vLib1  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N01' );
+vLib2  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N02' );
+vLib3  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N03' );
+vLib4  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N04' );
+vLib5  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N05' );
+vLib6  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N06' );
+vLib7  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N07' );
+vLib8  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N08' );
+vLib9  	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N09' );
+vLib10 	  = CellGetS( sCubeSource,Hierarchie,Item,'LIB_N10' );
+
+vCodeLib0   = vNiveau0   | '-' | vLib0 ;
+vCodeLib1   = vNiveau1   | '-' | vLib1 ;
+vCodeLib2   = vNiveau2   | '-' | vLib2 ;
+vCodeLib3   = vNiveau3   | '-' | vLib3 ;
+vCodeLib4   = vNiveau4   | '-' | vLib4 ;
+vCodeLib5   = vNiveau5   | '-' | vLib5 ;
+vCodeLib6   = vNiveau6   | '-' | vLib6 ;
+vCodeLib7   = vNiveau7   | '-' | vLib7 ;
+vCodeLib8   = vNiveau8   | '-' | vLib8 ;
+vCodeLib9   = vNiveau9   | '-' | vLib9 ;
+vCodeLib10 = vNiveau10 | '-' | vLib10; 
+
+
+# # On stocke les niveaux dans les attributs
+IF(Dimix(vDimTempHierarchie, Value) <> 0);
+        ElementAttrPutS(vLib0, vDimTempHierarchie, vHierarchieTemp, Value, 'N00'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib1, vDimTempHierarchie, vHierarchieTemp, Value, 'N01'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib2, vDimTempHierarchie, vHierarchieTemp, Value, 'N02'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib3, vDimTempHierarchie, vHierarchieTemp, Value, 'N03'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib4, vDimTempHierarchie, vHierarchieTemp, Value, 'N04'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib5, vDimTempHierarchie, vHierarchieTemp, Value, 'N05'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib6, vDimTempHierarchie, vHierarchieTemp, Value, 'N06'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib7, vDimTempHierarchie, vHierarchieTemp, Value, 'N07'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib8, vDimTempHierarchie, vHierarchieTemp, Value, 'N08'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib9, vDimTempHierarchie, vHierarchieTemp, Value, 'N09'  | '_' | vHierarchyName);
+        ElementAttrPutS(vLib10,vDimTempHierarchie, vHierarchieTemp, Value, 'N10' | '_' | vHierarchyName);  
+ENDIF;
+
+IF (vNiveau0 @<>'');
+    ElementAttrPutS( vLib0 , vDimTempHierarchie, vHierarchieTemp, vNiveau0,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib0 , vDimTempHierarchie, vHierarchieTemp, vNiveau0,  'Code-Libelle' );
+    ElementAttrPutS( vLib0 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau0,    'Libelle' | '_' | vHierarchyName);     
+ENDIF;
+
+IF (vNiveau1 @<>'' & vLib1@<>''  );    
+    ElementAttrPutS( vLib1 , vDimTempHierarchie, vHierarchieTemp, vNiveau1,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib1 , vDimTempHierarchie, vHierarchieTemp, vNiveau1,  'Code-Libelle' );
+    ElementAttrPutS( vLib1 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau1,    'Libelle' | '_' | vHierarchyName);    
+ENDIF;
+
+IF (vNiveau2 @<>'' & vLib2@<>''  );
+     ElementAttrPutS( vLib2 , vDimTempHierarchie, vHierarchieTemp, vNiveau2,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib2 , vDimTempHierarchie, vHierarchieTemp, vNiveau2,  'Code-Libelle' );
+    ElementAttrPutS( vLib2 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau2,    'Libelle' | '_' | vHierarchyName);    
+ENDIF;
+
+IF (vNiveau3 @<> '' & vLib3 @<> '' );
+     ElementAttrPutS( vLib3 , vDimTempHierarchie, vHierarchieTemp, vNiveau3,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib3 , vDimTempHierarchie, vHierarchieTemp, vNiveau3,  'Code-Libelle' );
+    ElementAttrPutS( vLib3 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau3,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau4 @<> '' & vLib4 @<> '' );
+    ElementAttrPutS( vLib4 , vDimTempHierarchie, vHierarchieTemp, vNiveau4,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib4 , vDimTempHierarchie, vHierarchieTemp, vNiveau4,  'Code-Libelle' );
+   ElementAttrPutS( vLib4 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau4,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau5 @<> '' & vLib5 @<> '' );
+    ElementAttrPutS( vLib5 , vDimTempHierarchie, vHierarchieTemp, vNiveau5,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib5 , vDimTempHierarchie, vHierarchieTemp, vNiveau5,  'Code-Libelle' );
+    ElementAttrPutS( vLib5 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau5,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau6 @<> '' & vLib6 @<> '' );
+    ElementAttrPutS( vLib6 , vDimTempHierarchie, vHierarchieTemp, vNiveau6,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib6 , vDimTempHierarchie, vHierarchieTemp, vNiveau6,  'Code-Libelle' );
+    ElementAttrPutS( vLib6 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau6,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau7 @<> '' & vLib7 @<> '' );
+    ElementAttrPutS( vLib7 , vDimTempHierarchie, vHierarchieTemp, vNiveau7,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib7 , vDimTempHierarchie, vHierarchieTemp, vNiveau0,  'Code-Libelle' );
+    ElementAttrPutS( vLib7 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau7,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau8 @<> '' & vLib8 @<> '' );
+    ElementAttrPutS( vLib8 , vDimTempHierarchie, vHierarchieTemp, vNiveau8,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib8 , vDimTempHierarchie, vHierarchieTemp, vNiveau8,  'Code-Libelle' );
+    ElementAttrPutS( vLib8 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau8,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau9 @<> '' & vLib9 @<> '' );
+     ElementAttrPutS( vLib9 , vDimTempHierarchie, vHierarchieTemp, vNiveau9,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib9 , vDimTempHierarchie, vHierarchieTemp, vNiveau9,  'Code-Libelle' );
+    ElementAttrPutS( vLib9 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau9,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+IF (vNiveau10 @<> '' & vLib10 @<> '' );
+    ElementAttrPutS( vLib10 , vDimTempHierarchie, vHierarchieTemp, vNiveau10,   'Lib' | '_' | vHierarchyName);
+    ElementAttrPutS( vCodeLib10 , vDimTempHierarchie, vHierarchieTemp, vNiveau10,  'Code-Libelle' );
+    ElementAttrPutS( vLib10 | ' (' | vHierarchyName | ')' , vDimTempHierarchie, vHierarchieTemp, vNiveau10,    'Libelle' | '_' | vHierarchyName);   
+ENDIF;
+
+#endregion
+#region Epilog
+
+# -- Browse the Mapping element in the "Fin_Param_Compte" cube and clear it if the element no longer exists in the "Z_TMP_Hierarchy_FIN" dimension ---------
+cCubeTarget = 'FIN_Param_Compte';
+cDimCompte = 'Compte';
+nMax = DIMSIZ( cDimCompte );
+nCtr = 1;
+
+WHILE( nCtr <= nMax );
+    
+	vCompte = DIMNM( cDimCompte , nCtr );
+	IF( ELLEV( 'Compte' , vCompte ) = 0 ) ;
+        # -- Get Mapping value
+        vMappingValue = CellGetS( cCubeTarget, vCompte, Hierarchie, 'Mapping' );
+
+		IF( DIMIX( 'Z_Tmp_Hierarchie_FIN_TEST_2', vMappingValue ) = 0 ); 
+            IF (CellIsUpdateable(cCubeTarget, vCompte, Hierarchie, 'Mapping')  <> 0); 
+    		    CellPutS( ' ', cCubeTarget, vCompte, Hierarchie, 'Mapping' );
+            ENDIF;
+		ENDIF;
+     
+    ENDIF;
+    nCtr = nCtr + 1;
+END;
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# -- Create Subset hierarchy to use as picklist on the mapping ------------------------------------------------------------------------------------------------------------------------
+cDimHierarchieFin = 'Hierarchie_FIN';
+sDimTmpHierarchie = 'Z_Tmp_Hierarchie_FIN_Test';
+
+nMax = DIMSIZ( cDimHierarchieFin );
+nCtr = 1;
+
+WHILE( nCtr <= nMax );
+
+	vHierarchieFin = DIMNM( cDimHierarchieFin , nCtr );
+    
+    IF( DIMIX( sDimTmpHierarchie, vHierarchieFin ) <> 0);
+        vSubsetName =   'Z_' |vHierarchieFin |'_Level_0' ;
+        vMdx = '{EXCEPT(DISTINCT({[Z_Tmp_Hierarchie_FIN_TEST].[Z_Tmp_Hierarchie_FIN_TEST].['| vHierarchieFin |'],DESCENDANTS([Z_Tmp_Hierarchie_FIN_TEST].[Z_Tmp_Hierarchie_FIN_TEST].['| vHierarchieFin |'] , 99 , LEAVES)}) , {[Z_Tmp_Hierarchie_FIN_TEST].[Z_Tmp_Hierarchie_FIN_TEST].['| vHierarchieFin |']})}';
+    
+        # -- Create subset by MDX
+        IF( HierarchySubsetExists( sDimTmpHierarchie, sDimTmpHierarchie, vSubsetName )  = 1);
+            HierarchySubsetDestroy( sDim, sDimHierarchie, vSubsetName );
+        ELSE;
+            HierarchySubsetCreate  ( sDimTmpHierarchie, sDimTmpHierarchie, vSubsetName, 0 );
+        ENDIF;
+    
+        HierarchySubsetMDXSet( sDimTmpHierarchie, sDimTmpHierarchie, vSubsetName, vMDX );
+        ENDIF;
+
+    nCtr = nCtr + 1;
+END;
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endregion

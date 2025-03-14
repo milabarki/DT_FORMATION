@@ -136,5 +136,8 @@
 			"Type":"Numeric"
 		}
 	],
-	"Subsets@Code.links":[]
+	"Subsets@Code.links":
+	[
+		"Indicateur_Hierarchie.subsets/Z__Level_0.json"
+	]
 }

@@ -27,8 +27,11 @@
 
 
 
+['N10'] = S: attrs('Compte',Elpar('Z_Tmp_Hierarchie_FIN',DB('FIN_Param_Compte', !Compte, !Hierarchie_FIN, 'Mapping'),1),'Lib_CRF');
+['N09'] = S: ELPAR('Z_Tmp_Hierarchie_FIN',DB('FIN_Param_Compte', !Compte, !Hierarchie_FIN, 'N10'),1);
 
-[] = S:   
+                   
+  [] = S:   
 attrs('Compte', db('Fin_Param_Compte', !Compte,!Hierarchie_FIN,'Mapping'),!Indicateur_Compte | '_' | Attrs('Hierarchie_FIn',!Hierarchie_FIn,'Nom'));
 
   

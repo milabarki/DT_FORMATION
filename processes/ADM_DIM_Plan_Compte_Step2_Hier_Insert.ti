@@ -1,0 +1,36 @@
+#region Prolog
+
+# =============================================================================
+# -- Process Name : ADM_DIM_Plan_Compte_Step2_Hier_Insert
+#
+# -- Process Description : Fusion de la dimension "Z_TMP_Hiérarchie" dans "Z_TMP_Plan_Compte"
+#
+# -- Process Version :
+#                 1.0  - 14/03/2025 - MBA-Datatilt : Version initial
+#                 1.1 -  xx/xx/xxx   -
+# =============================================================================
+
+
+#Region  ***  Variables
+
+cProcessName = GetProcessName();
+vTime = TIMST( NOW() , '\Y\m\d_\h\i\s' );
+sCubeSource = '}ElementAttributes_Z_Tmp_Hierarchie_FIN' ;
+
+pTemp = 1;
+pDebug =1;
+
+#EndRegion
+
+#Region  ***  Création de la vue source
+
+#EndRegion
+
+#Region  ***  Création de la vue Cible
+
+#EndRegion
+
+
+
+
+#endregion

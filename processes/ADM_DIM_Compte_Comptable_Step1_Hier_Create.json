@@ -1,69 +1,52 @@
 {
 	"@type":"Process",
-	"Name":"CUB_FIN_Reel_Prototype_Cumul",
+	"Name":"ADM_DIM_Compte_Comptable_Step1_Hier_Create",
 	"HasSecurityAccess":false,
-	"Code@Code.link":"CUB_FIN_Reel_Prototype_Cumul.ti",
+	"Code@Code.link":"ADM_DIM_Compte_Comptable_Step1_Hier_Create.ti",
 	"DataSource":
 	{
 		"Type":"TM1CubeView",
-		"dataSourceNameForServer":"FIN_Reel_Prototype",
-		"dataSourceNameForClient":"FIN_Reel_Prototype",
+		"dataSourceNameForServer":"FIN_Param_Hierarchie_Compte",
+		"dataSourceNameForClient":"FIN_Param_Hierarchie_Compte",
 		"view":"Z_ALL"
 	},
 	"Parameters":[],
 	"Variables":
 	[
 		{
-			"Name":"Version",
+			"Name":"Hierarchie",
 			"Type":"String",
 			"Position":1,
 			"StartByte":0,
 			"EndByte":0
 		},
 		{
-			"Name":"Periode",
+			"Name":"Item",
 			"Type":"String",
 			"Position":2,
 			"StartByte":0,
 			"EndByte":0
 		},
 		{
-			"Name":"Centre_Profit",
+			"Name":"Indicateur_Hierarchie",
 			"Type":"String",
 			"Position":3,
 			"StartByte":0,
 			"EndByte":0
 		},
 		{
-			"Name":"Compte",
+			"Name":"Value",
 			"Type":"String",
 			"Position":4,
 			"StartByte":0,
 			"EndByte":0
-		},
-		{
-			"Name":"Indicateur",
-			"Type":"String",
-			"Position":5,
-			"StartByte":0,
-			"EndByte":0
-		},
-		{
-			"Name":"Value",
-			"Type":"Numeric",
-			"Position":6,
-			"StartByte":0,
-			"EndByte":0
 		}
 	],
-	"UID": "1738687393000",
 	"UIData": "_ParameterConstraints=e30=\f",
 	"VariablesUIData": [
 		"VarType=32\fColType=827\f",
 		"VarType=32\fColType=827\f",
 		"VarType=32\fColType=827\f",
-		"VarType=32\fColType=827\f",
-		"VarType=32\fColType=827\f",
-		"VarType=33\fColType=827\f"
+		"VarType=32\fColType=827\f"
 	]
 }

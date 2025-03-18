@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"Z_Hierarchie01_Level0",
+	"Alias":"MEMBER_NAME",
+	"Expression":"TM1IGNORE_BADTUPLES {EXCEPT(DISTINCT({[Z_Tmp_Hierarchie_FIN].[Z_Tmp_Hierarchie_FIN].[Hierarchie01],DESCENDANTS([Z_Tmp_Hierarchie_FIN].[Z_Tmp_Hierarchie_FIN].[Hierarchie01] , 99 , LEAVES)}) , {[Z_Tmp_Hierarchie_FIN].[Z_Tmp_Hierarchie_FIN].[Hierarchie01]})}"
+}

@@ -1,0 +1,6 @@
+{
+	"@type":"Subset",
+	"Name":"Niveau0",
+	"Alias":"MEMBER_NAME",
+	"Expression":"TM1IGNORE_BADTUPLES {{[Centre_Profit].[Centre_Profit].MEMBERS}}"
+}

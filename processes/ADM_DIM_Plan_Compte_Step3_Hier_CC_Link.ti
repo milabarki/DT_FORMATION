@@ -1,0 +1,154 @@
+#region Prolog
+
+# =============================================================================================================
+# -- Process Name : ADM_DIM_Plan_Compte_Step3_Hier_CC_Link
+#
+# -- Process Description : Affectation des comptes comptables aux parents saisis dans l'element mapping
+#
+# -- Process Version :
+#                 1.0  - 18/03/2025 - MBA-Datatilt : Version initial
+#                 1.1 -  xx/xx/xxx   -
+# ============================================================================================================
+
+
+#Region  ***  Variables
+# ***************************************************************************************
+# -- Variables par défault
+cProcessName = GetProcessName();
+vTime = TIMST( NOW() , '\Y\m\d_\h\i\s' );
+pTemp = 1;
+pDebug =1;
+
+iLine = 1 ;
+
+# -- Variables de rejets
+sCube_REJECT = 'Z_Admin_Rejets' ;
+nErrorLine = 0 ;
+
+# -- Varibles Source
+sCubeSource   = 'FIN_Param_Compte';
+sViewSource   = 'Z_Source_View_'| cProcessName;
+sSubsetSource = 'Z_Source_Subset_'|cProcessName | vTime;
+
+# Variables Cible
+# vDimPlanCompte = 'Z_Tmp_Plan_Compte'  ;
+# vHierarchiePlanCompte = vDimPlanCompte;
+
+vDimPlanCompte = 'Compte'  ;
+vHierarchiePlanCompte = vDimPlanCompte;
+
+#EndRegion
+
+#Region  ***  Création de la vue Source
+# ***************************************************************************************
+IF( ViewExists( sCubeSource, sViewSource ) = 1);
+    ViewDestroy( sCubeSource, sViewSource );
+Else;
+    ViewCreate( sCubeSource , sViewSource , pTemp );
+EndIf;
+
+# -- 1 -- Dim : PLAN_COMPTE ----------------------------------------------------------------------------------------------
+#sDim = 'Plan_Compte';
+#sDimHierarchie = 'Plan_Compte' ;
+
+sDim = 'Compte';
+sDimHierarchie = 'Compte';
+
+HierarchySubsetDestroy( sDim, sDimHierarchie, sSubsetSource );
+HierarchySubsetCreate( sDim, sDimHierarchie, sSubsetSource, pTemp );
+
+sMdx = 'FILTER({ORDER(TM1FILTERBYLEVEL(TM1SUBSETALL([Compte].[Compte]) , 0) , [Compte].[Compte].CURRENTMEMBER.PROPERTIES("MEMBER_NAME") , BASC)}, (INSTR(1, [Compte].[Compte].CURRENTMEMBER.PROPERTIES("Check_Compte"), "X", 1) >= 1))';
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, sMDX );
+HierarchySubsetMDXSet( sDim, sDimHierarchie, sSubsetSource, '' );
+
+ViewSubsetAssign( sCubeSource , sViewSource , sDim , sSubsetSource );
+
+# -- 3 -- Dim : INDICATEUR_COMPTE -------------------------------------------------------------------------------------
+sDim = 'Indicateur_Compte';
+sDimHierarchie = 'Indicateur_Compte' ;
+
+HierarchySubsetDestroy( sDim, sDimHierarchie, sSubsetSource );
+HierarchySubsetCreate( sDim, sDimHierarchie, sSubsetSource, pTemp );
+
+HierarchySubsetElementInsert(  sDim, sDimHierarchie, sSubsetSource, 'Mapping', 1 );
+
+ViewSubsetAssign( sCubeSource , sViewSource , sDim , sSubsetSource );
+
+#EndRegion
+
+#Region  ***  Fonctions d'optimisation
+# ***************************************************************************************
+ViewExtractSkipCalcsSet( sCubeSource , sViewSource , 1 ) ;
+ViewExtractSkipRuleValuesSet( sCubeSource , sViewSource , 0 ) ;
+ViewExtractSkipZeroesSet( sCubeSource , sViewSource , 0 ) ;
+#EndRegion
+
+#Region  ***  Fonctions d'optimisation
+# ***************************************************************************************
+DatasourceNameForServer = sCubeSource ;
+DatasourceCubeview = sViewSource ;
+#EndRegion
+
+#Region  ***  Définition de la source de donnée
+# ***************************************************************************************
+DataSourceType = 'VIEW' ;
+DatasourceNameForServer = sCubeSource ;
+DatasourceNameForClient = sCubeSource ;
+DatasourceCubeView = sViewSource ;
+#EndRegion
+
+#Region  ***  Target
+
+#EndRegion
+
+
+#endregion
+#region Metadata
+
+ASCIIOutput( 'ZZ_TEST_data.csv', vHierarchie, vElement, vIndicateur,  vValeur );
+
+
+#Region  ***  Création des libellés des hiérarchies.
+# ***************************************************************************************
+# -- Get Hierarchy Name From "Hierarchie_FIN" Dimension
+vHierarchyName = CellGetS( '}ElementAttributes_Hierarchie_FIN', vHierarchie, 'Nom' );
+IF (vHierarchyName @= '');
+    ItemSkip;
+EndIf;
+
+#EndRegion
+
+#Region  ***  Filtrage : Insérer dans "Bilan" si le premier chiffre est 1, sinon dans "CR".
+# ***************************************************************************************
+#IF(Attrs('Compte',vElement,'Check_Compte')@='X');
+
+IF(subst(vElement,1,1)@<'6');
+    vConso = 'Bilan';
+Else;
+    vConso = 'CR';
+EndIf;
+
+    HierarchyElementComponentAddDirect( vDimPlanCompte, vHierarchiePlanCompte, vConso, vElement, 1);   
+#EndIf;
+
+
+#Region  ***  Création et affectation des comptes comptables aux parents saisis dans l'element mapping
+# ***************************************************************************************
+IF(vValeur @='');
+
+    HierarchyElementInsertDirect( vDimPlanCompte, vHierarchiePlanCompte, '', vHierarchie |'_A_Affecter'  , 'N' );
+    HierarchyElementInsertDirect( vDimPlanCompte, vHierarchiePlanCompte, '', vHierarchie , 'N' );
+    
+    HierarchyElementComponentAddDirect( vDimPlanCompte, vHierarchiePlanCompte, vHierarchie |'_A_Affecter', vElement, 1);   
+    HierarchyElementComponentAddDirect( vDimPlanCompte, vHierarchiePlanCompte, vHierarchie, vHierarchie |'_A_Affecter', 1); 
+  
+ElseIf(subst(vValeur,1,3)  @='NA_');
+    
+    HierarchyElementInsertDirect( vDimPlanCompte, vHierarchiePlanCompte, '', vHierarchie |'_Non_Affecter'  , 'N' );
+
+    HierarchyElementComponentAddDirect( vDimPlanCompte, vHierarchiePlanCompte, vHierarchie |'_Non_Affecter', vElement, 1);   
+    HierarchyElementComponentAddDirect( vDimPlanCompte, vHierarchiePlanCompte, vHierarchie, vHierarchie |'_Non_Affecter', 1); 
+
+EndIf;
+
+#endregion

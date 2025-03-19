@@ -1,0 +1,52 @@
+{
+	"@type":"Process",
+	"Name":"ADM_DIM_Plan_Compte_Step3_Hier_CC_Link",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"ADM_DIM_Plan_Compte_Step3_Hier_CC_Link.ti",
+	"DataSource":
+	{
+		"Type":"TM1CubeView",
+		"dataSourceNameForServer":"FIN_Param_Compte",
+		"dataSourceNameForClient":"FIN_Param_Compte",
+		"view":"z_ALL"
+	},
+	"Parameters":[],
+	"Variables":
+	[
+		{
+			"Name":"vElement",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vHierarchie",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vIndicateur",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vValeur",
+			"Type":"String",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		}
+	],
+	"UIData": "_ParameterConstraints=e30=\f",
+	"VariablesUIData": [
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f",
+		"VarType=32\fColType=827\f"
+	]
+}
